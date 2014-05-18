@@ -1,4 +1,3 @@
-#include <errno.h>
 #include <fftw3.h>
 #include <glib.h>
 #include <math.h>
