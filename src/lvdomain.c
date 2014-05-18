@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
         sscanf(framesize, "%ux%u", &framewidth, &frameheight);
     }
     if(framewidth == 0 || frameheight == 0) {
-        g_printerr("Argument error: frame size should be specified in WIDTHxHEIGHT\n");
+        g_printerr("Argument error: frame size should be specified with \"-s WIDTHxHEIGHT\"\n");
         return 1;
     }
     if(framewidth % (blocksize*2) != 0 || frameheight % (blocksize*2) != 0) {
