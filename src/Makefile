@@ -1,7 +1,7 @@
 
 CC=gcc
 CFLAGS+=-Wall -O3 -g3 $(shell pkg-config --cflags fftw3 glib-2.0)
-LDFLAGS+=$(shell pkg-config --libs fftw3 glib-2.0)
+LDFLAGS+=$(shell pkg-config --libs fftw3 glib-2.0) -lm
 
 .PHONY: all clean
 

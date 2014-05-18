@@ -2,19 +2,19 @@
 #include <stdio.h>
 
 static gint blocksize = 8;
-static gdouble quantizer = 16;
+static gint quantizer = 4;
 static gchar *framesize;
 static guint framewidth = 0, frameheight = 0;
 static gboolean grayonly = FALSE;
 static GOptionEntry entries[] = {
     {"blocksize", 'b', 0, G_OPTION_ARG_INT, &blocksize, "DCT block size [default: 8]", "BLOCKSIZE"},
-    {"quantizer", 'q', 0, G_OPTION_ARG_DOUBLE, &quantizer, "Quantizer step length [default: 16.0]", "QUANTIZER"},
+    {"quantizer", 'q', 0, G_OPTION_ARG_INT, &quantizer, "Quantizer step length [default: 4]", "QUANTIZER"},
     {"size", 's', 0, G_OPTION_ARG_STRING, &framesize, "Frame size, must be multipliers of block size", "WIDTHxHEIGHT"},
-    {"gray", 'g', 0, G_OPTION_ARG_NONE, &grayonly, "Use luminance only, grayscale is used instead of yuv420p", NULL},
+    {"gray", 'g', 0, G_OPTION_ARG_NONE, &grayonly, "Use luminance only", NULL},
     {NULL}
 };
 
-int lvdodispatch(FILE *fi, FILE *fo, unsigned int blocksize, double quantizer, unsigned int width, unsigned int height, int grayonly);
+int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quantizer, unsigned int width, unsigned int height, int grayonly);
 
 int main(int argc, char *argv[]) {
     GError *error = NULL;
@@ -32,8 +32,9 @@ int main(int argc, char *argv[]) {
         g_printerr("Argument error: blocksize should be a positive integer\n");
         return 1;
     }
-    if(quantizer <= 0.0) {
-        g_printerr("Argument error: blocksize should be a positive real number\n");
+    if(quantizer < 0 || quantizer > 7) {
+        g_printerr("Argument error: quantizer should be between 0 and 7\n");
+        return 1;
     }
     if(framesize && framesize[0]) {
         sscanf(framesize, "%ux%u", &framewidth, &frameheight);
@@ -42,8 +43,9 @@ int main(int argc, char *argv[]) {
         g_printerr("Argument error: frame size should be specified in WIDTHxHEIGHT\n");
         return 1;
     }
-    if(framewidth % blocksize != 0 || frameheight % blocksize != 0) {
+    if(framewidth % (blocksize*2) != 0 || frameheight % (blocksize*2) != 0) {
         g_printerr("Argument error: frame size can not be divided by %d", blocksize*2);
+        return 1;
     }
-    return lvdodispatch(stdin, stdout, blocksize, quantizer, framewidth, frameheight, grayonly);
+    return lvdo_dispatch(stdin, stdout, blocksize, quantizer, framewidth, frameheight, grayonly);
 }
