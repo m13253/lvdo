@@ -5,7 +5,7 @@
 #include <string.h>
 #include "lvdocommon.h"
 
-int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quantizer, unsigned int width, unsigned int height, int grayonly) {
+int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, int grayonly) {
     size_t payloadlen = (grayonly ? width*height : width*height*3/2)*(8-quantizer)/8;
     unsigned char *payload = g_malloc(payloadlen);
     unsigned char *framey = g_malloc(width*height);
