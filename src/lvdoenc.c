@@ -6,13 +6,15 @@
 #include "lvdocommon.h"
 
 int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, int grayonly) {
-    size_t payloadlen = (grayonly ? width*height : width*height*3/2)*(8-quantizer)/8;
+    size_t payloadlen = (grayonly ? width*height : width*height*3/2)*(8-quantizer)*(qmax-qmin)/blocksize/blocksize/8;
     unsigned char *payload = g_malloc(payloadlen);
     unsigned char *framey = g_malloc(width*height);
     unsigned char *frameuv = g_malloc(width*height/2);
+    unsigned int *zigzag_reverse = new_zigzag_reverse(blocksize);
     double *in = fftw_malloc(blocksize*blocksize*sizeof (double));
     double *out = fftw_malloc(blocksize*blocksize*sizeof (double));
     fftw_plan plan = fftw_plan_r2r_2d(blocksize, blocksize, in, out, FFTW_REDFT01, FFTW_REDFT01, FFTW_PATIENT | FFTW_DESTROY_INPUT);
+    memset(in, 0, blocksize*blocksize*sizeof (double));
     if(grayonly)
         memset(frameuv, 0x80, width*height/2);
     while(!feof(fi)) {
@@ -25,7 +27,7 @@ int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quant
             memset(payload+readres, 0, payloadlen-readres);
         for(blocki = 0; blocki*blocksize < (grayonly ? height : height*3/2); blocki++)
             for(blockj = 0; blockj*blocksize < width; blockj++) {
-                for(pixeli = 0; pixeli < blocksize*blocksize; pixeli++) {
+                for(pixeli = qmin; pixeli < qmax; pixeli++) {
                     if(availbit == 0) {
                         lastbyte = payload[payloadi++];
                         availbit = 8;
@@ -33,7 +35,7 @@ int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quant
                         lastbyte |= ((unsigned int) payload[payloadi++])<<availbit;
                         availbit += 8;
                     }
-                    in[pixeli] = ((int) ((lastbyte&(0xff>>quantizer))<<quantizer)-128)/(blocksize*2.0);
+                    in[zigzag_reverse[pixeli]] = ((int) ((lastbyte&(0xff>>quantizer))<<quantizer)-128)/(blocksize*2.0);
                     lastbyte >>= (8-quantizer);
                     availbit -= 8-quantizer;
                 }

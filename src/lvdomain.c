@@ -12,7 +12,7 @@ static GOptionEntry entries[] = {
     {"blocksize", 'b', 0, G_OPTION_ARG_INT, &blocksize, "DCT block size [default: 8]", "BLOCKSIZE"},
     {"quantizer", 'q', 0, G_OPTION_ARG_INT, &quantizer, "Quantizer step length [default: 4]", "QUANTIZER"},
     {"qmin", 0, 0, G_OPTION_ARG_INT, &qmin, "Minimum DCT index used [default: 0]", "QMIN"},
-    {"qmax", 0, 0, G_OPTION_ARG_INT, &qmax, "Maximum DCT index used [default: QUANTIZER*QUANTIZER]", "QMAX"},
+    {"qmax", 0, 0, G_OPTION_ARG_INT, &qmax, "Maximum DCT index used [default: BLOCKSIZE*BLOCKSIZE]", "QMAX"},
     {"size", 's', 0, G_OPTION_ARG_STRING, &framesize, "Frame size, must be multipliers of block size", "WIDTHxHEIGHT"},
     {"gray", 'g', 0, G_OPTION_ARG_NONE, &grayonly, "Use luminance only", NULL},
     {NULL}
@@ -41,13 +41,13 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     if(qmax == -1)
-        qmax = quantizer*quantizer;
-    if(qmin < 0 || qmin > quantizer*quantizer) {
-        g_printerr("Argument error: qmin should be between 0 and %d\n", quantizer*quantizer);
+        qmax = blocksize*blocksize;
+    if(qmin < 0 || qmin > blocksize*blocksize) {
+        g_printerr("Argument error: qmin should be between 0 and %d\n", blocksize*blocksize);
         return 1;
     }
-    if(qmax < 0 || qmax > quantizer*quantizer) {
-        g_printerr("Argument error: qmax should be between 0 and %d\n", quantizer*quantizer);
+    if(qmax < 0 || qmax > blocksize*blocksize) {
+        g_printerr("Argument error: qmax should be between 0 and %d\n", blocksize*blocksize);
         return 1;
     }
     if(qmin >= qmax) {
