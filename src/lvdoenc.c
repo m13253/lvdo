@@ -62,6 +62,6 @@ static void lvdo_enc_frame(const unsigned char *payload, unsigned char *frame, u
             fftw_execute(plan);
             for(pixeli = 0; pixeli < blocksize; pixeli++)
                 for(pixelj = 0; pixelj < blocksize; pixelj++)
-                    frame[(blocki*blocksize+pixeli)*width+(blockj*blocksize+pixelj)] = prevent_char_overflow(round(out[pixeli*blocksize+pixelj]/blocksize)+128);
+                    frame[(blocki*blocksize+pixeli)*width+(blockj*blocksize+pixelj)] = prevent_char_overflow(round(out[pixeli*blocksize+pixelj]/ceil(sqrt(qmax-qmin)))+128);
         }
 }
