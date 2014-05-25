@@ -3,8 +3,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-
-static unsigned char prevent_char_overflow(int x);
+#include "lvdocommon.h"
 
 int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quantizer, unsigned int width, unsigned int height, int grayonly) {
     size_t payloadlen = (grayonly ? width*height : width*height*3/2)*(8-quantizer)/8;
@@ -60,14 +59,3 @@ int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quant
     return 0;
 }
 
-static unsigned char prevent_char_overflow(int x) {
-    if(x > 255) {
-        g_warning("Clipping %d to 255", x);
-        return 255;
-    }
-    if(x < 0) {
-        g_warning("Clipping %d to 0", x);
-        return 0;
-    }
-    return x;
-}
