@@ -42,7 +42,9 @@ static void lvdo_enc_frame(const unsigned char *payload, unsigned char *frame, u
     unsigned int lastbyte = 0, availbit = 0;
     for(blocki = 0; blocki*blocksize < height; blocki++)
         for(blockj = 0; blockj*blocksize < width; blockj++) {
-            for(pixeli = qmin; pixeli < qmax; pixeli++) {
+            for(pixeli = 0; pixeli < qmin; pixeli++)
+                in[pixeli] = 0;
+            for(pixeli = pixeli; pixeli < qmax; pixeli++) {
                 if(availbit == 0) {
                     lastbyte = payload[payloadi++];
                     availbit = 8;
@@ -50,10 +52,13 @@ static void lvdo_enc_frame(const unsigned char *payload, unsigned char *frame, u
                     lastbyte |= ((unsigned int) payload[payloadi++])<<availbit;
                     availbit += 8;
                 }
-                in[zigzag_reverse[pixeli]] = ((int) ((lastbyte&(0xff>>quantizer))<<quantizer)-128)/(blocksize*2.0);
-                lastbyte >>= (8-quantizer);
+                in[zigzag_reverse[pixeli]] = ((lastbyte & 0xff>>quantizer)<<quantizer ^ 0x80)*0.859375/(blocksize*2.0)/ceil(sqrt(qmax-qmin));
+                lastbyte >>= 8-quantizer;
                 availbit -= 8-quantizer;
             }
+            for(pixeli = pixeli; pixeli < blocksize*blocksize; pixeli++)
+                in[pixeli] = 0;
+            in[0] += 64.0; // Shift output by +128
             in[0] *= 2; // Normalize for FFTW
             for(pixeli = 1; pixeli < blocksize; pixeli++)
                 in[pixeli] *= M_SQRT2;
@@ -62,6 +67,6 @@ static void lvdo_enc_frame(const unsigned char *payload, unsigned char *frame, u
             fftw_execute(plan);
             for(pixeli = 0; pixeli < blocksize; pixeli++)
                 for(pixelj = 0; pixelj < blocksize; pixelj++)
-                    frame[(blocki*blocksize+pixeli)*width+(blockj*blocksize+pixelj)] = prevent_yuv_overflow(round(out[pixeli*blocksize+pixelj]/ceil(sqrt(qmax-qmin)))+128);
+                    frame[(blocki*blocksize+pixeli)*width+(blockj*blocksize+pixelj)] = prevent_yuv_overflow(round(out[pixeli*blocksize+pixelj]));
         }
 }
