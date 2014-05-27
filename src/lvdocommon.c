@@ -1,13 +1,13 @@
 #include <glib.h>
 
-unsigned char prevent_char_overflow(int x) {
-    if(x > 255) {
-        g_warning("Clipping %d to 255", x);
-        return 255;
+unsigned char prevent_yuv_overflow(int x) {
+    if(x > 235) {
+        g_warning("Clipping %d to 235", x);
+        return 235;
     }
-    if(x < 0) {
-        g_warning("Clipping %d to 0", x);
-        return 0;
+    if(x < 16) {
+        g_warning("Clipping %d to 16", x);
+        return 16;
     }
     return x;
 }
