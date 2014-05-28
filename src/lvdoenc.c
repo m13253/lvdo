@@ -57,7 +57,7 @@ static void lvdo_enc_frame(const unsigned char *payload, unsigned char *frame, u
                     lastbyte |= ((unsigned int) payload[payloadi++])<<availbit;
                     availbit += 8;
                 }
-                in[zigzag_reverse[pixeli]] = (((signed char) lastbyte>>quantizer)<<quantizer ^ 0x80)*0.859375/(blocksize*2*ceil(sqrt(qmax-qmin)));
+                in[zigzag_reverse[pixeli]] = (signed char) ((lastbyte & 0xff>>quantizer)<<quantizer ^ 0x80)*0.84375/(blocksize*2*ceil(sqrt(qmax-qmin)));
                 lastbyte >>= 8-quantizer;
                 availbit -= 8-quantizer;
             }

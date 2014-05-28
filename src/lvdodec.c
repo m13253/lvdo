@@ -41,7 +41,7 @@ static void lvdo_dec_frame(unsigned char *payload, const unsigned char *frame, u
         for(blockj = 0; blockj*blocksize < width; blockj++) {
             for(pixeli = 0; pixeli < blocksize; pixeli++)
                 for(pixelj = 0; pixelj < blocksize; pixelj++)
-                    in[pixeli*blocksize+pixelj] = (signed char) (frame[(blocki*blocksize+pixeli)*width+(blockj*blocksize+pixelj)] ^ 0x80)*ceil(sqrt(qmax-qmin))/0.859375;
+                    in[pixeli*blocksize+pixelj] = (signed char) (frame[(blocki*blocksize+pixeli)*width+(blockj*blocksize+pixelj)] ^ 0x80)*ceil(sqrt(qmax-qmin))/0.8359375;
             fftw_execute(plan);
             out[0] /= 2;
             for(pixeli = 1; pixeli < blocksize; pixeli++)

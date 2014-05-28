@@ -42,7 +42,7 @@ void print_block(const int *block, unsigned int size) {
     for(i = 0; i < size; i++) {
         for(j = 0; j < size; j++)
             g_printerr("%d ", block[i*size+j]);
-        g_printerr("\n");
+        g_printerr(";\n");
     }
     g_printerr("\n");
 }
@@ -52,7 +52,7 @@ void print_block_double(const double *block, unsigned int size) {
     for(i = 0; i < size; i++) {
         for(j = 0; j < size; j++)
             g_printerr("%lf ", block[i*size+j]);
-        g_printerr("\n");
+        g_printerr(";\n");
     }
     g_printerr("\n");
 }
