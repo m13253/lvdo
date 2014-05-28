@@ -41,19 +41,14 @@ static void lvdo_dec_frame(unsigned char *payload, const unsigned char *frame, u
         for(blockj = 0; blockj*blocksize < width; blockj++) {
             for(pixeli = 0; pixeli < blocksize; pixeli++)
                 for(pixelj = 0; pixelj < blocksize; pixelj++)
-                    in[pixeli*blocksize+pixelj] = (signed char) (frame[(blocki*blocksize+pixeli)*width+(blockj*blocksize+pixelj)] ^ 0x80)*ceil(sqrt(qmax-qmin))/0.859375L;
+                    in[pixeli*blocksize+pixelj] = (signed char) (frame[(blocki*blocksize+pixeli)*width+(blockj*blocksize+pixelj)] ^ 0x80)*ceil(sqrt(qmax-qmin))/0.859375;
             fftw_execute(plan);
             out[0] /= 2;
             for(pixeli = 1; pixeli < blocksize; pixeli++)
                 out[pixeli] *= M_SQRT2;
             for(pixeli = blocksize; pixeli < blocksize*blocksize; pixeli += blocksize)
                 out[pixeli] *= M_SQRT2;
-            for(pixeli = 0; pixeli < blocksize; pixeli++) {
-                for(pixelj = 0; pixelj < blocksize; pixelj++)
-                    g_print("%lf ", out[pixeli*blocksize+pixelj]);
-                g_print("\n");
-            }
-            g_print("\n");
+            print_block_double(out, blocksize);
             for(pixeli = qmin; pixeli < qmax; pixeli++) {
                 if(availbit & ~(unsigned int) 0x7) {
                     payload[payloadi++] = (unsigned char) lastbyte;
@@ -62,6 +57,7 @@ static void lvdo_dec_frame(unsigned char *payload, const unsigned char *frame, u
                 }
                 lastbyte <<= 8-quantizer;
                 lastbyte |= (unsigned int) round(out[zigzag_index[pixeli]]) >> quantizer;
+                availbit += 8-quantizer;
             }
         }
 }
