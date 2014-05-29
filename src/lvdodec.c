@@ -41,7 +41,7 @@ static void lvdo_dec_frame(unsigned char *payload, const unsigned char *frame, u
         for(blockj = 0; blockj*blocksize < width; blockj++) {
             for(pixeli = 0; pixeli < blocksize; pixeli++)
                 for(pixelj = 0; pixelj < blocksize; pixelj++)
-                    in[pixeli*blocksize+pixelj] = (signed char) (frame[(blocki*blocksize+pixeli)*width+(blockj*blocksize+pixelj)] ^ 0x80)*ceil(sqrt(qmax-qmin))/0.84375;
+                    in[pixeli*blocksize+pixelj] = (signed char) (frame[(blocki*blocksize+pixeli)*width+(blockj*blocksize+pixelj)] ^ 0x80)*ceil(sqrt(qmax-qmin))/(blocksize*2*0.84375);
             fftw_execute(plan);
             out[0] /= 2;
             for(pixeli = 1; pixeli < blocksize; pixeli++)
@@ -56,7 +56,7 @@ static void lvdo_dec_frame(unsigned char *payload, const unsigned char *frame, u
                     availbit -= 8;
                 }
                 lastbyte <<= 8-quantizer;
-                lastbyte |= (unsigned int) round(out[zigzag_index[pixeli]]) >> quantizer;
+                lastbyte |= (unsigned int) round(out[zigzag_index[pixeli]]+128) >> quantizer;
                 availbit += 8-quantizer;
             }
         }
