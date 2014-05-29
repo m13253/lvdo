@@ -10,7 +10,7 @@ static void lvdo_enc_frame(const unsigned char *payload, unsigned char *frame, u
 int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, int grayonly) {
     size_t payloadleny = width*height*(qmax-qmin)*(8-quantizer)/(blocksize*blocksize*8);
     size_t payloadlen = grayonly ? payloadleny : payloadleny*3/2;
-    unsigned char *payload = g_malloc(payloadlen);
+    unsigned char *payload = g_malloc(payloadlen+1);
     unsigned char *framey = g_malloc(width*height);
     unsigned char *frameuv = g_malloc(width*height/2);
     unsigned int *zigzag_reverse = new_zigzag_reverse(blocksize);
@@ -30,8 +30,7 @@ int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quant
         int readres = fread(payload, 1, payloadlen, fi);
         if(readres == 0)
             break;
-        if(readres < payloadlen)
-            memset(payload+readres, 0, payloadlen-readres);
+        memset(payload+readres, 0, payloadlen+1-readres);
         lvdo_enc_frame(payload, framey, blocksize, quantizer, qmin, qmax, width, height, in, out, plan, zigzag_reverse);
         fwrite(framey, 1, width*height, fo);
         if(!grayonly)
@@ -62,6 +61,7 @@ static void lvdo_enc_frame(const unsigned char *payload, unsigned char *frame, u
                 availbit -= 8-quantizer;
             }
             in[0] += 64.0; // Shift output by +128
+            print_block_double(in, blocksize);
             in[0] *= 2; // Normalize for FFTW
             for(pixeli = 1; pixeli < blocksize; pixeli++)
                 in[pixeli] *= M_SQRT2;

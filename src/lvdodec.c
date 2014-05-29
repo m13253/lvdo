@@ -25,7 +25,7 @@ int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quant
         lvdo_dec_frame(payload, framey, blocksize, quantizer, qmin, qmax, width, height, in, out, plan, zigzag_index);
         fwrite(payload, 1, payloadlen, fo);
         if(!grayonly) {
-            lvdo_dec_frame(payload, frameuv, blocksize, quantizer, qmin, qmax, width, height/2, in, out, plan, zigzag_index);
+            lvdo_dec_frame(payload, frameuv, blocksize, quantizer, qmin, qmax, width/2, height, in, out, plan, zigzag_index);
             fwrite(payload, 1, payloadlen/2, fo);
         }
     }
@@ -41,13 +41,13 @@ static void lvdo_dec_frame(unsigned char *payload, const unsigned char *frame, u
         for(blockj = 0; blockj*blocksize < width; blockj++) {
             for(pixeli = 0; pixeli < blocksize; pixeli++)
                 for(pixelj = 0; pixelj < blocksize; pixelj++)
-                    in[pixeli*blocksize+pixelj] = (signed char) (frame[(blocki*blocksize+pixeli)*width+(blockj*blocksize+pixelj)] ^ 0x80)*ceil(sqrt(qmax-qmin))/0.8359375;
+                    in[pixeli*blocksize+pixelj] = (signed char) (frame[(blocki*blocksize+pixeli)*width+(blockj*blocksize+pixelj)] ^ 0x80)*ceil(sqrt(qmax-qmin))/0.84375;
             fftw_execute(plan);
             out[0] /= 2;
             for(pixeli = 1; pixeli < blocksize; pixeli++)
-                out[pixeli] *= M_SQRT2;
+                out[pixeli] *= M_SQRT1_2;
             for(pixeli = blocksize; pixeli < blocksize*blocksize; pixeli += blocksize)
-                out[pixeli] *= M_SQRT2;
+                out[pixeli] *= M_SQRT1_2;
             print_block_double(out, blocksize);
             for(pixeli = qmin; pixeli < qmax; pixeli++) {
                 if(availbit & ~(unsigned int) 0x7) {

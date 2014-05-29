@@ -61,9 +61,15 @@ int main(int argc, char *argv[]) {
         g_printerr("Argument error: frame size should be specified with \"-s WIDTHxHEIGHT\"\n");
         return 1;
     }
-    if(framewidth % (blocksize*2) != 0 || frameheight % (blocksize*2) != 0) {
-        g_printerr("Argument error: frame size can not be divided by %d", blocksize*2);
-        return 1;
-    }
+    if(grayonly)
+        if(framewidth % blocksize != 0 || frameheight % blocksize != 0) {
+            g_printerr("Argument error: frame size can not be divided by %d", blocksize);
+            return 1;
+        } else;
+    else
+        if(framewidth % (blocksize*2) != 0 || frameheight % (blocksize*2) != 0) {
+            g_printerr("Argument error: frame size can not be divided by %d", blocksize*2);
+            return 1;
+        }
     return lvdo_dispatch(stdin, stdout, blocksize, quantizer, qmin, qmax, framewidth, frameheight, grayonly);
 }
