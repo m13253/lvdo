@@ -56,7 +56,7 @@ static void lvdo_dec_frame(unsigned char *payload, const unsigned char *frame, u
                     availbit -= 8;
                 }
                 lastbyte <<= 8-quantizer;
-                lastbyte |= (unsigned int) round(out[zigzag_index[pixeli]]+128) >> quantizer;
+                lastbyte |= prevent_byte_overflow(round((out[zigzag_index[pixeli]]+128)/(1<<quantizer)));
                 availbit += 8-quantizer;
             }
         }

@@ -1,5 +1,17 @@
 #include <glib.h>
 
+unsigned char prevent_byte_overflow(int x) {
+    if(x > 255) {
+        g_warning("Clipping %d to 255", x);
+        return 255;
+    }
+    if(x < 0) {
+        g_warning("Clipping %d to 0", x);
+        return 0;
+    }
+    return x;
+}
+
 unsigned char prevent_yuv_overflow(int x) {
     if(x > 235) {
         g_warning("Clipping %d to 235", x);
