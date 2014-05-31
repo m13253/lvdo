@@ -21,7 +21,7 @@ This is a possible combination of parameters:
 ```bash
 # Install dependencies (modify according to your Linux distribution)
 sudo apt-get install libglib2.0-dev libfftw3-dev
-sudo apt-get install ffmpeg x264 mplayer
+sudo apt-get install git ffmpeg x264 mplayer
 
 # Compile it
 git clone https://github.com/m13253/lvdo.git
