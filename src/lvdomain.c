@@ -3,7 +3,7 @@
 
 static gint blocksize = 8;
 static gint quantizer = 4;
-static gint qmin = 0;
+static gint qmin = 1;
 static gint qmax = -1;
 static gchar *framesize;
 static guint framewidth = 0, frameheight = 0;
@@ -11,9 +11,9 @@ static gboolean grayonly = FALSE;
 static gboolean verbose = FALSE;
 static GOptionEntry entries[] = {
     {"blocksize", 'b', 0, G_OPTION_ARG_INT, &blocksize, "DCT block size [default: 8]", "BLOCKSIZE"},
-    {"quantizer", 'q', 0, G_OPTION_ARG_INT, &quantizer, "Quantizer step length [default: 4]", "QUANTIZER"},
-    {"qmin", 0, 0, G_OPTION_ARG_INT, &qmin, "Minimum DCT index used [default: 0]", "QMIN"},
-    {"qmax", 0, 0, G_OPTION_ARG_INT, &qmax, "Maximum DCT index used [default: BLOCKSIZE*BLOCKSIZE]", "QMAX"},
+    {"quantizer", 'q', 0, G_OPTION_ARG_INT, &quantizer, "Quantizer step length, lower for more data capacity (0..7) [default: 4]", "QUANTIZER"},
+    {"qmin", 0, 0, G_OPTION_ARG_INT, &qmin, "Minimum DCT index used, lower for more data capacity (0..BLOCKSIZE*BLOCKSIZE-1) [default: 1]", "QMIN"},
+    {"qmax", 0, 0, G_OPTION_ARG_INT, &qmax, "Maximum DCT index used, higher for more data capacity (1..BLOCKSIZE*BLOCKSIZE) [default: BLOCKSIZE*BLOCKSIZE/2]", "QMAX"},
     {"size", 's', 0, G_OPTION_ARG_STRING, &framesize, "Frame size, must be multipliers of block size", "WIDTHxHEIGHT"},
     {"gray", 'g', 0, G_OPTION_ARG_NONE, &grayonly, "Use luminance only", NULL},
     {"verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Print debug information", NULL},
@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     if(qmax == -1)
-        qmax = blocksize*blocksize;
+        qmax = blocksize*blocksize/2;
     if(qmin < 0 || qmin > blocksize*blocksize) {
         g_printerr("Argument error: qmin should be between 0 and %d\n", blocksize*blocksize);
         return 1;
