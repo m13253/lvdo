@@ -2,11 +2,11 @@
 
 unsigned char prevent_byte_overflow(int x) {
     if(x > 255) {
-        g_warning("Clipping %d to 255", x);
+        g_printerr("lvdo: [warning] Clipping %d to 255\n", x);
         return 255;
     }
     if(x < 0) {
-        g_warning("Clipping %d to 0", x);
+        g_printerr("lvdo: [warning] Clipping %d to 0\n", x);
         return 0;
     }
     return x;
@@ -14,11 +14,11 @@ unsigned char prevent_byte_overflow(int x) {
 
 unsigned char prevent_yuv_overflow(int x) {
     if(x > 235) {
-        g_warning("Clipping %d to 235", x);
+        g_printerr("lvdo: [warning] Clipping %d to 235\n", x);
         return 235;
     }
     if(x < 16) {
-        g_warning("Clipping %d to 16", x);
+        g_printerr("lvdo: [warning] Clipping %d to 16\n", x);
         return 16;
     }
     return x;
