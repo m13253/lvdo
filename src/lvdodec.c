@@ -5,7 +5,7 @@
 #include <string.h>
 #include "lvdocommon.h"
 
-static void lvdo_dec_frame(unsigned char *payload, const unsigned char *frame, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, double *in, double *out, const fftw_plan plan, const unsigned int *zigzag_index);
+static void lvdo_dec_frame(unsigned char *payload, size_t payloadlen, const unsigned char *frame, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, double *in, double *out, const fftw_plan plan, const unsigned int *zigzag_index);
 
 int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, int grayonly) {
     size_t payloadlen = width*height*(qmax-qmin)*(8-quantizer)/(blocksize*blocksize*8);
@@ -22,10 +22,10 @@ int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quant
             break;
         if(readres < width*height*3/2)
             memset(framey+readres, 0, width*height*3/2-readres);
-        lvdo_dec_frame(payload, framey, blocksize, quantizer, qmin, qmax, width, height, in, out, plan, zigzag_index);
+        lvdo_dec_frame(payload, payloadlen, framey, blocksize, quantizer, qmin, qmax, width, height, in, out, plan, zigzag_index);
         fwrite(payload, 1, payloadlen, fo);
         if(!grayonly) {
-            lvdo_dec_frame(payload, frameuv, blocksize, quantizer, qmin, qmax, width/2, height, in, out, plan, zigzag_index);
+            lvdo_dec_frame(payload, payloadlen/2, frameuv, blocksize, quantizer, qmin, qmax, width/2, height, in, out, plan, zigzag_index);
             fwrite(payload, 1, payloadlen/2, fo);
         }
     }
@@ -34,7 +34,7 @@ int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quant
     return 0;
 }
 
-static void lvdo_dec_frame(unsigned char *payload, const unsigned char *frame, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, double *in, double *out, const fftw_plan plan, const unsigned int *zigzag_index) {
+static void lvdo_dec_frame(unsigned char *payload, size_t payloadlen, const unsigned char *frame, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, double *in, double *out, const fftw_plan plan, const unsigned int *zigzag_index) {
     unsigned int payloadi = 0, blocki, blockj, pixeli, pixelj;
     unsigned int lastbyte = 0, availbit = 0;
     for(blocki = 0; blocki*blocksize < height; blocki++)
@@ -51,12 +51,14 @@ static void lvdo_dec_frame(unsigned char *payload, const unsigned char *frame, u
             print_block_double(out, blocksize);
             for(pixeli = qmin; pixeli < qmax; pixeli++) {
                 if(availbit & ~(unsigned int) 0x7) {
-                    payload[payloadi++] = (unsigned char) lastbyte;
+                    if(payloadi != payloadlen)
+                        payload[payloadi++] = (unsigned char) lastbyte;
                     lastbyte >>= 8;
                     availbit -= 8;
                 }
                 lastbyte <<= 8-quantizer;
                 lastbyte |= prevent_byte_overflow(round((out[zigzag_index[pixeli]]+128)/(1<<quantizer)));
+                g_printerr("Decode chunk: 0x%02x\n", prevent_byte_overflow(round((out[zigzag_index[pixeli]]+128)/(1<<quantizer))));
                 availbit += 8-quantizer;
             }
         }
