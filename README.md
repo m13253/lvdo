@@ -61,3 +61,27 @@ I hope you will not abuse this program to do something evil.
 I suggest you **not** try to encode porn with LVDO and upload it to YouTube.
 You would be punished then.
 
+
+FAQ
+---
+
+1. Why it is called LVDO?
+
+You Will find some secrets when you read it in Japanesu Engurishu.
+
+2. How do I adjust those complicated parameters?
+
+Do not use the maximum. Do not use the minimum either. Try to decode your self
+before publishing.
+
+3. Why the video downloaded from YouTube can not be decoded?
+
+Play around with those parameters please. If you could not get it work, feel
+free to contact me for help.
+
+4. What is `clipping xxx to xxx`?
+
+It means the decoded file is corrupted. If it happens a lot during decoding,
+make sure you are using appropriate parameters. If it happens a lot during
+encoding, please submit an issue to me alongside with your parameters.
+
