@@ -8,6 +8,7 @@ static gint qmax = -1;
 static gchar *framesize;
 static guint framewidth = 0, frameheight = 0;
 static gboolean grayonly = FALSE;
+static gboolean verbose = FALSE;
 static GOptionEntry entries[] = {
     {"blocksize", 'b', 0, G_OPTION_ARG_INT, &blocksize, "DCT block size [default: 8]", "BLOCKSIZE"},
     {"quantizer", 'q', 0, G_OPTION_ARG_INT, &quantizer, "Quantizer step length [default: 4]", "QUANTIZER"},
@@ -15,10 +16,11 @@ static GOptionEntry entries[] = {
     {"qmax", 0, 0, G_OPTION_ARG_INT, &qmax, "Maximum DCT index used [default: BLOCKSIZE*BLOCKSIZE]", "QMAX"},
     {"size", 's', 0, G_OPTION_ARG_STRING, &framesize, "Frame size, must be multipliers of block size", "WIDTHxHEIGHT"},
     {"gray", 'g', 0, G_OPTION_ARG_NONE, &grayonly, "Use luminance only", NULL},
+    {"verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Print debug information", NULL},
     {NULL}
 };
 
-int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, int grayonly);
+int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, int grayonly, int verbose);
 
 int main(int argc, char *argv[]) {
     GError *error = NULL;
@@ -71,5 +73,5 @@ int main(int argc, char *argv[]) {
             g_printerr("Argument error: frame size can not be divided by %d", blocksize*2);
             return 1;
         }
-    return lvdo_dispatch(stdin, stdout, blocksize, quantizer, qmin, qmax, framewidth, frameheight, grayonly);
+    return lvdo_dispatch(stdin, stdout, blocksize, quantizer, qmin, qmax, framewidth, frameheight, grayonly, verbose);
 }

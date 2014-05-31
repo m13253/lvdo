@@ -5,9 +5,9 @@
 #include <string.h>
 #include "lvdocommon.h"
 
-static void lvdo_enc_frame(const unsigned char *payload, size_t payloadlen, unsigned char *frame, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, double *in, double *out, const fftw_plan plan, const unsigned int *zigzag_reverse);
+static void lvdo_enc_frame(const unsigned char *payload, size_t payloadlen, unsigned char *frame, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, int verbose, double *in, double *out, const fftw_plan plan, const unsigned int *zigzag_reverse);
 
-int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, int grayonly) {
+int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, int grayonly, int verbose) {
     size_t payloadleny = width*height*(qmax-qmin)*(8-quantizer)/(blocksize*blocksize*8);
     size_t payloadlen = grayonly ? payloadleny : payloadleny*3/2;
     unsigned char *payload = g_malloc(payloadlen);
@@ -32,10 +32,10 @@ int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quant
             break;
         if(readres < payloadlen)
             memset(payload+readres, 0, payloadlen-readres);
-        lvdo_enc_frame(payload, payloadleny, framey, blocksize, quantizer, qmin, qmax, width, height, in, out, plan, zigzag_reverse);
+        lvdo_enc_frame(payload, payloadleny, framey, blocksize, quantizer, qmin, qmax, width, height, verbose, in, out, plan, zigzag_reverse);
         fwrite(framey, 1, width*height, fo);
         if(!grayonly)
-            lvdo_enc_frame(payload+payloadleny, payloadleny/2, frameuv, blocksize, quantizer, qmin, qmax, width/2, height, in, out, plan, zigzag_reverse);
+            lvdo_enc_frame(payload+payloadleny, payloadleny/2, frameuv, blocksize, quantizer, qmin, qmax, width/2, height, verbose, in, out, plan, zigzag_reverse);
         fwrite(frameuv, 1, width*height/2, fo);
     }
     fftw_free(in); fftw_free(out); fftw_destroy_plan(plan);
@@ -43,7 +43,7 @@ int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quant
     return 0;
 }
 
-static void lvdo_enc_frame(const unsigned char *payload, size_t payloadlen, unsigned char *frame, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, double *in, double *out, const fftw_plan plan, const unsigned int *zigzag_reverse) {
+static void lvdo_enc_frame(const unsigned char *payload, size_t payloadlen, unsigned char *frame, unsigned int blocksize, unsigned int quantizer, unsigned int qmin, unsigned int qmax, unsigned int width, unsigned int height, int verbose, double *in, double *out, const fftw_plan plan, const unsigned int *zigzag_reverse) {
     unsigned int payloadi = 0, blocki, blockj, pixeli, pixelj;
     unsigned int lastbyte = 0, availbit = 0;
     for(blocki = 0; blocki*blocksize < height; blocki++)
@@ -59,7 +59,6 @@ static void lvdo_enc_frame(const unsigned char *payload, size_t payloadlen, unsi
                         lastbyte |= ((unsigned int) payload[payloadi++])<<availbit;
                     availbit += 8;
                 }
-                g_printerr("Encode chunk: 0x%02x\n", (lastbyte & 0xff>>quantizer)<<quantizer ^ 0x80);
                 in[zigzag_reverse[pixeli]] = (signed char) ((lastbyte & 0xff>>quantizer)<<quantizer ^ 0x80)*0.84375/(blocksize*2*ceil(sqrt(qmax-qmin)));
                 lastbyte >>= 8-quantizer;
                 availbit -= 8-quantizer;
