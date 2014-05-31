@@ -5,8 +5,8 @@ LVDO is a video steganography implementation by StarBrilliant using DCT
 coefficients.
 
 
-What can it achieve?
---------------------
+What can it do?
+---------------
 
 You can convert a file into video and upload it to YouTube or many other video
 sites. The receiver downloads the video and is able to extract the file using
