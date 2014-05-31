@@ -64,7 +64,8 @@ static void lvdo_enc_frame(const unsigned char *payload, size_t payloadlen, unsi
                 availbit -= 8-quantizer;
             }
             in[0] += 64.0; // Shift output by +128
-            print_block_double(in, blocksize);
+            if(verbose)
+                print_block_double(in, blocksize);
             in[0] *= 2; // Normalize for FFTW
             for(pixeli = 1; pixeli < blocksize; pixeli++)
                 in[pixeli] *= M_SQRT2;
