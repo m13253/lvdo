@@ -49,7 +49,7 @@ unsigned int *new_zigzag_reverse(unsigned int size) {
     return zigzag_reverse;
 }
 
-void print_block(const int *block, unsigned int size) {
+void print_block(const unsigned int *block, unsigned int size) {
     unsigned int i, j;
     for(i = 0; i < size; i++) {
         for(j = 0; j < size; j++)
