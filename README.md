@@ -53,8 +53,8 @@ the author does not provide any warranties. Users should be responsible for any
 potential damage caused by this software.
 
 
-Abuse
------
+Never abuse
+-----------
 
 I hope you will not abuse this program to do something evil.
 
