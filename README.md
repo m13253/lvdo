@@ -78,7 +78,8 @@ FAQ
 3. Why the video downloaded from YouTube can not be decoded?
 
    Play around with those parameters please. If you could not get it work, feel
-   free to contact me for help.
+   free to contact me for help. Also, YouTube forces the use of BT.709
+   colormatrix, make sure you are using the correct x264 setting.
 
 4. What is `clipping xxx to xxx`?
 
