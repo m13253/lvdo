@@ -43,6 +43,7 @@ Some parameter combination causes undecodable file.
 
 Due to rounding errors, input file and output file is not precisely the same.
 You should add some mechanism to keep file integrity.
+Join the [discussion](https://github.com/m13253/lvdo/issues/4) on this issue.
 
 
 License
