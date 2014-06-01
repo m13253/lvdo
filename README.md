@@ -66,9 +66,9 @@ You would be punished then.
 FAQ
 ---
 
-1. Why it is called LVDO?
+1. Why is it called LVDO?
 
-   You Will find some secrets when you read it in Japanesu Engurishu.
+   You will find some secrets when you read it in Japanesu Engurishu.
 
 2. How do I adjust those complicated parameters?
 
