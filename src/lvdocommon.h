@@ -63,10 +63,30 @@ static inline unsigned int *new_zigzag_reverse(unsigned int size) {
     unsigned int i;
     if(size == 0)
         return zigzag_index;
-    for(i = 0; i<size*size; i++)
+    for(i = 0; i < size*size; i++)
         zigzag_reverse[zigzag_index[i]] = i;
     g_free(zigzag_index);
     return zigzag_reverse;
+}
+
+/*
+static unsigned int floor_sqrt(unsigned int x) __attribute__((__const__));
+static unsigned int floor_sqrt(unsigned int x) {
+    unsigned int sq = 0;
+    unsigned int k = 0;
+    while(sq < x)
+        sq += ++k<<1 | 1;
+    return k;
+}
+*/
+
+static unsigned int ceil_sqrt(unsigned int x) __attribute__((__const__));
+static unsigned int ceil_sqrt(unsigned int x) {
+    unsigned int sq = 0;
+    unsigned int k = 0;
+    while(sq < x)
+        sq += k++<<1 | 1;
+    return k;
 }
 
 static inline void print_block(const unsigned int *block, unsigned int size) {
