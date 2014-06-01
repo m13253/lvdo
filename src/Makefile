@@ -8,7 +8,11 @@ override LDFLAGS+=$(shell pkg-config --libs fftw3 glib-2.0) -lm
 all: lvdoenc lvdodec
 
 lvdoenc: lvdoenc.o lvdomain.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 lvdodec: lvdodec.o lvdomain.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+%.o: %.c
+	$(CC) -c $(CFLAGS) -o $@ $^
 lvdoenc.c: lvdocommon.h
 lvdodec.c: lvdocommon.h
 
