@@ -84,5 +84,10 @@ FAQ
 
    It means the decoded file is corrupted. If it happens a lot during decoding,
    make sure you are using appropriate parameters. If it happens a lot during
-   encoding, please submit an issue to me alongside with your parameters.
+   encoding, please submit an [issue](https://github.com/m13253/lvdo/issues) to
+   me alongside with your parameters.
 
+5. Any other questions?
+
+   See if there are any [issues](https://github.com/m13253/lvdo/issues) on your
+   question. If not, submit one.
