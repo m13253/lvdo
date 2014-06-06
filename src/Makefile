@@ -1,5 +1,5 @@
 
-CC=gcc
+CC=clang
 override CFLAGS+=-Wall -O3 -g3 $(shell pkg-config --cflags fftw3 glib-2.0)
 override LDFLAGS+=$(shell pkg-config --libs fftw3 glib-2.0) -lm
 
