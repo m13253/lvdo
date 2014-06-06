@@ -1,8 +1,8 @@
 LVDO
 ========
 
-LVDO is a video steganography implementation by StarBrilliant using DCT
-coefficients.
+LVDO (pronounced as ludou) is a video steganography implementation by
+StarBrilliant using DCT coefficients.
 
 
 What can it do?
