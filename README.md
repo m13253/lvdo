@@ -107,7 +107,9 @@ Future
 
 5. Watermark bypassing mechanism
 
-6. Co-operation with some parasitic video sites
+6. Carrier picture support, see issue #3
+
+7. Co-operation with some parasitic video sites
 
 
 Miscellaneous
