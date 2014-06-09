@@ -106,7 +106,7 @@ Future
 
 3. Transmission Control Layer built on top of Bitstream Transport Layer
 
-4. Error tolerance control
+4. Error tolerance control, see issue [#4](https://github.com/m13253/lvdo/issues/4)
 
 5. Watermark bypassing mechanism
 
