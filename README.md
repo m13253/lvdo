@@ -92,3 +92,26 @@ FAQ
 
    See if there are any [issues](https://github.com/m13253/lvdo/issues) on your
    question. If not, submit one.
+
+
+Future
+------
+
+1. A friendlier GUI
+
+2. A streaming decoder in HTML5
+
+3. Transmission Control Layer built on top of Bitstream Transport Layer
+
+4. Error tolerance control
+
+5. Watermark bypassing mechanism
+
+6. Co-operation with some parasitic video sites
+
+
+Miscellaneous
+-------------
+
+See [LVDO in action](https://www.youtube.com/watch?v=b2bLHO5KC34).
+
