@@ -110,7 +110,8 @@ Future
 
 5. Watermark bypassing mechanism
 
-6. Carrier picture support, see issue [#3](https://github.com/m13253/lvdo/issues/3)
+6. Carrier picture support, that is what the encoded picture looks like, see
+   issue [#3](https://github.com/m13253/lvdo/issues/3)
 
 7. Co-operation with some parasitic video sites
 
