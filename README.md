@@ -53,6 +53,9 @@ This program is licensed under GNU General Public License version 3 or later,
 the author does not provide any warranties. Users should be responsible for any
 potential damage caused by this software.
 
+Head to the file [LICENSE](LICENSE) in the code repository for the license
+text.
+
 
 Never abuse
 -----------
@@ -107,7 +110,7 @@ Future
 
 5. Watermark bypassing mechanism
 
-6. Carrier picture support, see issue #3
+6. Carrier picture support, see issue [#3](https://github.com/m13253/lvdo/issues/3)
 
 7. Co-operation with some parasitic video sites
 
