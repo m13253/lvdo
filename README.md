@@ -45,6 +45,10 @@ Due to rounding errors, input file and output file is not precisely the same.
 You should add some mechanism to keep file integrity.
 Join the [discussion](https://github.com/m13253/lvdo/issues/4) on this issue.
 
+Note that LVDO is not cryptographic secure! Anyone can decode the data with the
+same parameters. If you have secret data, encrypt it with a password or a key
+before feeding it into LVDO.
+
 
 License
 -------
