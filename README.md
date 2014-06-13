@@ -75,7 +75,7 @@ FAQ
 
 1. Why is it called LVDO?
 
-   You will find some secrets when you read it in Japanesu Engurishu.
+   You will find some secrets when you spell it out in Japanesu Engurishu.
 
 2. How do I adjust those complicated parameters?
 
