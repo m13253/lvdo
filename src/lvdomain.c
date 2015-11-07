@@ -82,12 +82,12 @@ int main(int argc, char *argv[]) {
     }
     if(grayonly)
         if(framewidth % blocksize != 0 || frameheight % blocksize != 0) {
-            g_printerr("Argument error: frame size can not be divided by %d", blocksize);
+            g_printerr("Argument error: frame size can not be divided by %d\n", blocksize);
             return 1;
         } else;
     else
         if(framewidth % (blocksize*2) != 0 || frameheight % (blocksize*2) != 0) {
-            g_printerr("Argument error: frame size can not be divided by %d", blocksize*2);
+            g_printerr("Argument error: frame size can not be divided by %d\n", blocksize*2);
             return 1;
         }
     return lvdo_dispatch(stdin, stdout, blocksize, quantizer, qmin, qmax, framewidth, frameheight, grayonly, verbose);
