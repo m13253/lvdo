@@ -41,6 +41,8 @@ int lvdo_dispatch(FILE *fi, FILE *fo, unsigned int blocksize, unsigned int quant
         g_printerr("lvdo: [info] bytes per frame: %lu\n", (unsigned long) payloadlen);
     else {
         g_printerr("lvdo: [error] bytes per frame: 0\n");
+        fftw_free(in); fftw_free(out); fftw_destroy_plan(plan);
+        g_free(payload); g_free(framey); g_free(frameuv); g_free(zigzag_reverse);
         return 1;
     }
     while(!feof(fi)) {
