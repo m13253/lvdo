@@ -61,8 +61,10 @@ static inline unsigned int *new_zigzag_reverse(unsigned int size) {
     unsigned int *zigzag_index = new_zigzag_index(size);
     unsigned int *zigzag_reverse = g_malloc_n(size*size, sizeof (unsigned int));
     unsigned int i;
-    if(size == 0)
+    if(size == 0) {
+        g_free(zigzag_reverse);
         return zigzag_index;
+    }
     for(i = 0; i < size*size; i++)
         zigzag_reverse[zigzag_index[i]] = i;
     g_free(zigzag_index);
